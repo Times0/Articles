@@ -149,7 +149,9 @@ Les autres teams avaient des présentations vraiment impressionnantes pour la pl
 
 Finalement ce qui a semblé avoir beaucoup compté c'est les performances aux tests techniques, car certaines équipes qui ont fait une magnifique présentation et dont l'outil semblait marcher extrêmement bien n'ont pas fini dans le classement. On a appris plus tard que leur performances étaient en fait très mauvaises et que leur démo était faite avec des fausses données (comme nous au final sauf qu'on a model qui marche au moins un peu).
 
-Au final on repart avec une troisième place 🥉et l'estomac bien rempli de pâtes à la Bolognaise 🍝. Cette ville est vraiment magnifique je recommande :))
+Au final on repart avec une troisième place 🥉et l'estomac bien rempli de pâtes à la Bolognaise 🍝. 
+
+La ville de Bologne est vraiment magnifique
 
 Faites des hackathons c'est sympa
 
