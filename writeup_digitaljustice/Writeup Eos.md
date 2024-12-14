@@ -91,6 +91,13 @@ On lui donne une phrase en input, il créé un embedding et cherche ceux qui son
 
 ```python
 results = collection.query(query_texts=["Tax fraud committed by foreigners"], n_results=2,)
+for i in range(len(results)):
+    print(results[i].id, results[i].score)
+    print(results[i].embedding)
+    print(results[i].metadata)
+
+    # On peut aussi récupérer les textes correspondants
+    print(collection.get(results[i].id))
 ```
 
 L'indexage a pris une vingtaine de minutes pour ces 600 fichiers,
