@@ -31,11 +31,9 @@ L'idée c'est de reproduire la requête créée par le frontend vers le backend 
 
 Pour cela on ouvre la console dev sur firefox (F12) et on regarde l'onglet network quand on clique sur "plus"
 
-![[ezgif-7-db7251df96 1.gif]]
+![alt text](assets/ezgif-7-db7251df96.gif)
 
-Une requête GET interressante apparait :
-
-Voici l'url :
+Une requête GET interressante apparait à cet URL :
 
 `https://codices.coe.int/api/precis/tree?page=1&countryCode=ech&size=20&isFinalized=true`
 
@@ -156,7 +154,7 @@ Les autres teams avaient des présentations vraiment impressionnantes pour la pl
 
 Finalement ce qui a semblé avoir beaucoup compté c'est les performances aux tests techniques, car certaines équipes qui ont fait une magnifique présentation et dont l'outil semblait marcher extrêmement bien n'ont pas fini dans le classement. On a appris plus tard que leur performances étaient en fait très mauvaises et que leur démo était faite avec des fausses données (comme nous au final sauf qu'on a model qui marche au moins un peu).
 
-Au final on repart avec une troisième place 🥉et l'estomac bien rempli de pâtes à la Bolognaise 🍝. 
+Au final on repart avec une troisième place 🥉et l'estomac bien rempli de pâtes à la Bolognaise 🍝.
 
 La ville de Bologne est vraiment magnifique
 
