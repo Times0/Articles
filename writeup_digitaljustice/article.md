@@ -4,30 +4,34 @@ category:
 date: 2024-12-02
 ---
 
-Salut, j'ai fait mon premier Hackathon stylé au début du mois de novembre. Il était organisé par le Conseil de l'Europe, et 7 équipes étaient invitées à Bologne, tous frais payés, pour tenter de remporter 3 000 € de récompense 🤑.
+# Notre aventure au Hackathon Digital Justice
 
-Je vais vous raconter comment on a voulu créer en deux jours un outil qui aurait dû prendre des mois de développement, comment on s'est lamentablement planté, et comment on a, malgre tout, réussi à remporter la troisième place grâce à une petite filouterie qui a fonctionné 5 minutes avant la deadline.
+J'ai participé à mon premier hackathon d'envergure la semaine dernière. Organisé par le Conseil de l'Europe à Bologne, l'événement réunissait 7 équipes en compétition pour gagner 3 000 €.
+
+Voici l'histoire de comment on a tenté de créer en 48 heures un outil qui aurait du prendre des mois de développement, comment on s'est retrouvé dans une impasse technique, et comment une solution de dernière minute nous a permis de décrocher la troisième place.
 
 # Avant le Hackathon
 
+## Comprendre le problème juridique
+
 D'abord, un peu de contexte.
-Le sujet du hackathon était de créer un outil qui permette d'aider les professionnels du droit comme les avocats et les juges à trouver rapidement et facilement des jugements ayant un rapport avec celui sur lequel ils travaillent.
+Le sujet du hackathon était de créer un outil permettant aux professionnels du droit (avocats, juges) de trouver rapidement des jugements pertinents pour leurs affaires en cours.
 
-Pour le moment on n'a aucune idée de comment fonctionne le domaine ni que le droit est un domaine hyper complexe. Un exemple de cette complexité est que les lois de l'union européenne sont appliquées de manière différente dans les pays car les lois sont interprétées à travers le prisme de leur juridiction.
+À ce stade, nous n'avions aucune idée de la complexité du domaine juridique. Par exemple, les lois de l'Union européenne sont appliquées différemment selon les pays, car elles sont interprétées à travers le prisme de chaque juridiction nationale.
 
-Mais bon, on est encore naïf, pas grave on se dit que dans tous les cas on a besoin de voir et de comprendre à quoi ressemblent ces fameux jugements.
+Naïfs mais motivés, notre première étape était de comprendre à quoi ressemblaient ces fameux jugements.
 
 On tombe sur un site qui répertorie pleins de compte rendus de jugements ainsi que des "précis" (des résumés de décisions) et qui semble plutôt moderne (https://codices.coe.int/codices/documents/welcome).
 
 On se dit que pour faire des modèles d'IA on a besoin de beaucoup de ces textes, donc on décide de se lancer dans l'extraction des ces derniers.
 
-## Scraping
+## La collecte des données : techniques de scraping
 
-J'ai utilisé une technique très classique de scraping dont tout le monde devrait être au courant tellement elle est utile.
+J'ai utilisé une technique classique de scraping que tout développeur devrait connaître tant elle est utile.
 
-Cette API était très peu protégée, donc je te conseille de passer à la partie suivante si tu connais déjà car je n'ai eu besoin d'aucun technique originale pour récupérer les données (contrairement à quand j'ai reverse engineer l'API SNCF pour faire [mon outil](https://track-my-train-times.vercel.app/) de tracking de prix)
+Cette API était peu protégée, donc je te conseille de passer à la partie suivante si tu maîtrises déjà ces concepts. Je n'ai eu besoin d'aucune technique particulièrement originale pour récupérer les données (contrairement à quand j'ai reverse-engineered l'API SNCF pour [mon outil](https://track-my-train-times.vercel.app/) de suivi des prix).
 
-L'idée c'est de reproduire la requête créée par le frontend vers le backend depuis un script et d'automatiser tout ça pour récuper tout ce qu'on veut.
+L'approche consiste à reproduire dans un script les requêtes que le frontend envoie au backend, puis d'automatiser ce processus pour récupérer toutes les données souhaitées.
 
 Pour cela on ouvre la console dev sur firefox (F12) et on regarde l'onglet network quand on clique sur "plus"
 
@@ -63,25 +67,26 @@ Bon dans la vraie vie les données sont souvent un peu plus compliquées à scra
 
 En pratique, cela revient souvent à ajouter des headers à notre requête. Je ferai sûrement d'autres articles à ce sujet.
 
-# backend : embeddings + tsne 
+## Notre approche technique : embeddings et visualisation 3D
 
-Bon en vrai récupérer les données de codices ne nous a pas aidé tant que ça puisque les juges et notamment le goat de la data science à la cour de cassation Amaury Fouret nous avaient concocté un florilège de 5 bases de données complètement hétérogènes avec des fichier Html, pdf, docx et json.
+Récupérer les données de Codices ne nous a finalement pas tant aidés, car les juges (notamment Amaury Fouret, expert en data science à la Cour de cassation) nous avaient préparé un ensemble de 5 bases de données hétérogènes contenant des fichiers HTML, PDF, DOCX et JSON.
 
-En tout on avait :
+Notre corpus comprenait :
 
 - 20 000 textes de jugements (entre 2 et 15 pages par texte)
+- Plusieurs langues (anglais, français, grec, russe)
+- Des juridictions différentes, impliquant des structures de contenu variées
 
-- Dans plusieurs langues (anglais, français, grec, russe)
+Notre stratégie était de :
 
-- Et créé dans des juridictions différentes, c'est-à dire que le contenu peut être très différent.
+1. Créer des embeddings à partir de résumés en anglais générés par LLaMA 70B
+2. Stocker ces vecteurs pour permettre des calculs de similarité rapides
+3. Extraire 3 dimensions pertinentes de ces embeddings (d'environ 1000 dimensions)
+4. Représenter les jugements sur une carte interactive en 3D
 
-Notre idée était de créer des embeddings sur des résumés de ces textes en anglais fait par llama 70b avec un prompt bien trouvé, puis de les stocker de façon à pouvoir faire des calculs de similarité rapidement.
+![Schéma de notre architecture](assets/{624DB658-8062-4E93-8F38-465AFB9F0356}.png)
 
-On voulait ensuite extraire 3 dimensions intéressantes de ces embeddings (environ 1000 dimensions) pour représenter nos jugements sur une map interactive en 3D.
-
-![alt text](assets/{624DB658-8062-4E93-8F38-465AFB9F0356}.png)
-
-Cela ressemble beaucoup à une architecture de RAG, (domaine très à la mode surtout comme sujet de stage). On a voulu implémenter toutes ces étapes plus ou moins à la main ce qui après coup n'était peut etre pas la meilleure option, les gagnants ont par exemple utilisé une solution toute faite : https://weaviate.io
+Cette architecture s'apparente à un système RAG (Retrieval-Augmented Generation), domaine très en vogue actuellement. Avec le recul, notre décision d'implémenter ces étapes manuellement n'était peut-être pas optimale - les gagnants ont utilisé une solution clé en main : [Weaviate](https://weaviate.io).
 
 Je ne vais pas détailler ce qu'on a fait puisqu'on a pas pus aller au bout de cette solution, mais [Chroma db](https://github.com/chroma-core/chroma) semble etre un bon outil pour créer une vector database. On l'a fait tourner avec [LegalBert](https://huggingface.co/nlpaueb/legal-bert-base-uncased) en tant qu'embedder et on obtient des résultats très prometteurs sur notre base de fichiers test avec 600 fichiers.
 
@@ -124,7 +129,7 @@ Et hop, ni une ni deux je vais chercher un TP qu'on a fait avec Gabriel Frey deu
 
 Un notebook complètement rempli qui décrit tout le processus d'implémentation d'Elastic Search pour une bdd de fichiers JSON.
 
-Magnifique, grâce à cette solution qu'on parvient à faire fonctionner 5 min avant la deadline et avec quelques filouteries d'un membre de l'équipe : Ayoub on passe quelques tests  avec des bons score de confiance.
+Magnifique, grâce à cette solution qu'on parvient à faire fonctionner 5 min avant la deadline et avec quelques filouteries d'un membre de l'équipe : Ayoub on passe quelques tests avec des bons score de confiance.
 
 On est sauvés, pas de disqualification !
 
@@ -133,7 +138,7 @@ On est sauvés, pas de disqualification !
 La partie vraiment originale de notre projet, c'est la visualisation de nos données sur une map 3D. Il nous fallait les choquer.
 
 On voulait représenter des cas sur une map donc on a fait une map en 3D.
-Le site est host sur Vercel et dispo [Ici](https://map-my-justice.vercel.app/)
+Le site est host sur Vercel et dispo [Ici](https://map-my-justice.vercel.app/)
 
 ![alt text](assets/ezgif-6-dbd656204b.gif)
 
@@ -160,6 +165,22 @@ La ville de Bologne est vraiment magnifique
 
 Faites des hackathons c'est sympa
 
+## Ce que nous avons appris
+
+Ce hackathon nous a appris plusieurs leçons importantes :
+
+1. **Parfois, les solutions simples sont les meilleures** - Notre sauvetage de dernière minute avec ElasticSearch nous a rappelé que les technologies éprouvées peuvent être plus fiables que les approches de pointe dans un contexte de contrainte temporelle.
+
+2. **L'innovation visuelle peut faire la différence** - Notre visualisation 3D nous a démarqués des autres équipes qui proposaient principalement des moteurs de recherche améliorés.
+
+3. **Les performances techniques comptent** - Certaines équipes avec d'excellentes présentations n'ont pas été classées en raison de mauvaises performances aux tests techniques.
+
+Au final, nous repartons avec une troisième place 🥉 et l'estomac bien rempli de pâtes à la Bolognaise 🍝.
+
+Bologne est une ville magnifique, et je ne peux que vous encourager à participer à des hackathons.
+
+Les hackathons c'est cool :)
+
 Bisous
 
-![alt text](<assets/Pasted image 20241204040003.png>)
+![Bologne](assets/Pasted%20image%2020241204040003.png)
